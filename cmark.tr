@@ -25,12 +25,17 @@
 .nr EM 4.667c           \" even left margin (double sided)
 .nr LM 3.500c           \" left margin (single sided)
 .nr TW 14.000c          \" text width
+.nr HW \n(TW            \" header width
+.nr FW \n(TW            \" footer width
 .\""""""""""""" Font Parameters """"""""""""""""""
-.nr PS 12p              \" font size
-.nr VS 14p              \" line spacing
+.nr PS 11p              \" font size
+.nr VS 13p              \" line spacing
 .ds OS *\h'1m'*\h'1m'*  \" thematic break
 .\"""""""""""""" Paragraph Parameters """"""""""""
 .nr PI 1.5m             \" paragraph indent
+.nr QI 2*\n(PI            \" quote indent
+.nr QL \n(QI            \" quote left side indent		
+.nr QR \n(QI            \" quote right side indent
 .\"""""""""""""" Language Setup """"""""""""""""""""""""""""
 .\".lc_ctype de_DE.utf8
 .hylang de_DE           \" hyphenation language
@@ -56,7 +61,7 @@
 .wh 0 hd
 .wh -\n(BMu fo
 .ll \n(TWu          	\" set text width
-.lt \n(TWu          	\" set title width
+.lt \n(HWu          	\" set header width
 .\"""""""""""""""" Font Setup """""""""""""""""""
 .ps \n(PSu
 .vs \n(VSu
@@ -68,6 +73,7 @@
 .ds font_emph I
 .ds font_strong B
 .ds font_strong_emph BI
+.nr quote_level 0 1
 .\""""""""""""""" Helper Macros """""""""""""""""
 .de quote_fonts
 .   ds font_normal I
@@ -75,15 +81,45 @@
 .   ds font_strong BI
 .   ds font_strong_emph B
 ..
+.de normal_fonts
+.   ds font_normal R
+.   ds font_emph I
+.   ds font_strong B
+.   ds font_strong_emph BI
+..
 .\""""""""""""""""" cmark Macros """"""""""""""""
+.de DB                  \" Document initialization
+..
+.de DE                  \" Document cleanup
+..
+.de QB			\" Block Quote Begin
+.\" TODO: vertical spacing after headline or other blocks
+.   vs \n(VSu
+.   in +\n(QLu
+.   ll -\n(QRu
+.   ie \\n+[quote_level]%2 .quote_fonts
+.   el .normal_fonts
+.   nr indent_paragraph 0
+.   sp
+.   
+..
+.de QE			\" Block Quote End
+.   in -\n(QLu
+.   ll +\n(QRu
+.   ie \\n-[quote_level]%2 .quote_fonts
+.   el .normal_fonts
+.   nr indent_paragraph 0
+.   sp
+.   ns
+..
 .de P
 .   br
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft \\*[font_normal] 
 .   ie \\n[indent_paragraph] .ti +\n(PIu
-.   ne 1+\\n(.Vu
 .   el .nr indent_paragraph 1
+.   ne 2
 ..
 .de T
 .   br
