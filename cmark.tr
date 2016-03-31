@@ -30,12 +30,19 @@
 .\""""""""""""" Font Parameters """"""""""""""""""
 .nr PS 11p              \" font size
 .nr VS 13p              \" line spacing
-.ds OS *\h'1m'*\h'1m'*  \" thematic break
+.ds OS *\h'1m'*\h'1m'*
+.ds BU \(bu
+.\"""""""""""""""" Font Setup """""""""""""""""""
+.ps \n(PSu
+.vs \n(VSu
 .\"""""""""""""" Paragraph Parameters """"""""""""
 .nr PI 1.5m             \" paragraph indent
-.nr QI 2*\n(PI            \" quote indent
+.nr QI 2*\n(PI          \" quote indent
 .nr QL \n(QI            \" quote left side indent		
 .nr QR \n(QI            \" quote right side indent
+.nr LI 2*\n(PI          \" list indent
+.nr BS 1m               \" space for the bullet marker
+.nr ES 2*\n(PI          \" space for enum marker
 .\"""""""""""""" Language Setup """"""""""""""""""""""""""""
 .\".lc_ctype de_DE.utf8
 .hylang de_DE           \" hyphenation language
@@ -62,18 +69,18 @@
 .wh -\n(BMu fo
 .ll \n(TWu          	\" set text width
 .lt \n(HWu          	\" set header width
-.\"""""""""""""""" Font Setup """""""""""""""""""
-.ps \n(PSu
-.vs \n(VSu
 .\""""""""""""""""" Paragraph Setup """""""""""""
 .padj
-.\""""""""""""""" Control Variables """""""""""""
+.\""""""" Control Variables and Constants """""""
 .nr indent_paragraph 0                \" indent paragraph
 .ds font_normal R
 .ds font_emph I
 .ds font_strong B
 .ds font_strong_emph BI
 .nr quote_level 0 1
+.nr list_level 0 1
+.nr list_type_bullet 1
+.nr list_type_enumeration 2
 .\""""""""""""""" Helper Macros """""""""""""""""
 .de quote_fonts
 .   ds font_normal I
@@ -92,7 +99,7 @@
 ..
 .de DE                  \" Document cleanup
 ..
-.de QB			\" Block Quote Begin
+.de QB			\" Block quote begin
 .\" TODO: vertical spacing after headline or other blocks
 .   vs \n(VSu
 .   in +\n(QLu
@@ -103,14 +110,35 @@
 .   sp
 .   
 ..
-.de QE			\" Block Quote End
+.de QE			\" Block quote end
 .   in -\n(QLu
 .   ll +\n(QRu
 .   ie \\n-[quote_level]%2 .quote_fonts
 .   el .normal_fonts
 .   nr indent_paragraph 0
+..
+.de LB                  \" Bullet list begin
+.   vs \n(VSu
+.   in +\n(LIu
+.   nr list_type\\n+[list_level] \n[list_type_bullet]
+..
+.de LE                  \" Bullet list end
+.   in -\n(LIu
 .   sp
 .   ns
+.   rr list_type\\n[list_level] 
+.   nr list_level \\n[list_level]-1
+..
+.de I
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft \\*[font_normal] 
+.   sp
+.   ne 2
+.   ie \\n[list_type\\n[list_level]]=\n[list_type_bullet] \{\
+.       lnr start_position
+\\k[start_position]\\h'-\w'\*(BU'u-\n(BSu'\*(BU\\h'|\\n[start_position]'
+.   \}
 ..
 .de P
 .   br
