@@ -1,0 +1,144 @@
+.\""""""""""""""" General Setup """"""""""""""""""""
+.do xflag 3
+.warn
+.\""""""""""" Page Layout Parameters """"""""""""""""""
+.\""" Satzspiegel A4 (210 mm x 297 mm)
+.\"             Verhaeltnis Rand (einseitig)
+.\" Bundsteg    100          23,33 mm (35,00 mm)
+.\" Kopfsteg    140          33,00 mm
+.\" Aussensteg  198          46,67 mm (35,00 mm)
+.\" Fusssteg    280          66,00 mm
+.\" Textbreite  594         140,00 mm
+.\" Texthoehe   840         198,00 mm
+.\""" Satzspiegel A5 (148 mm x 210 mm)
+.\"             Verhaeltnis Rand (einseitig)
+.\" Bundsteg    100          16,44 mm (24,67 mm)
+.\" Kopfsteg    140          23,33 mm
+.\" Aussensteg  198          32,89 mm (24,67 mm)
+.\" Fusssteg    280          46,67 mm
+.\" Textbreite  594          98,67 mm
+.\" Texthoehe   840         140,00 mm
+.nr DS 1                \" 0: single sided, 1: double sided
+.nr TM 3.300c           \" top margin
+.nr BM 6.600c           \" bottom margin
+.nr OM 2.333c           \" odd left margin (double sided)
+.nr EM 4.667c           \" even left margin (double sided)
+.nr LM 3.500c           \" left margin (single sided)
+.nr TW 14.000c          \" text width
+.\""""""""""""" Font Parameters """"""""""""""""""
+.nr PS 12p              \" font size
+.nr VS 14p              \" line spacing
+.ds OS *\h'1m'*\h'1m'*  \" thematic break
+.\"""""""""""""" Paragraph Parameters """"""""""""
+.nr PI 1.5m             \" paragraph indent
+.\"""""""""""""" Language Setup """"""""""""""""""""""""""""
+.\".lc_ctype de_DE.utf8
+.hylang de_DE           \" hyphenation language
+.hy                     \" switch on hyphenation
+.ss \n[.ss] 0           \" no extra space at end of sentences
+.\"""""""""""""" Page Layout Setup """""""""""""""
+.papersize a4       	\" set width and height of paper
+.mediasize a4		\" set media size for PDF generation
+.ie \n(DS \{\
+.   de hd
+.       ie e .po \n(EMu
+.       el .po \n(OMu
+'       sp \n(TMu
+.   . \}
+.el \{\
+.   de hd
+.       po \n(LMu
+'       sp \n(TMu
+.   . \}
+.de fo
+'bp
+..
+.wh 0 hd
+.wh -\n(BMu fo
+.ll \n(TWu          	\" set text width
+.lt \n(TWu          	\" set title width
+.\"""""""""""""""" Font Setup """""""""""""""""""
+.ps \n(PSu
+.vs \n(VSu
+.\""""""""""""""""" Paragraph Setup """""""""""""
+.padj
+.\""""""""""""""" Control Variables """""""""""""
+.nr indent_paragraph 0                \" indent paragraph
+.ds font_normal R
+.ds font_emph I
+.ds font_strong B
+.ds font_strong_emph BI
+.\""""""""""""""" Helper Macros """""""""""""""""
+.de quote_fonts
+.   ds font_normal I
+.   ds font_emph   R
+.   ds font_strong BI
+.   ds font_strong_emph B
+..
+.\""""""""""""""""" cmark Macros """"""""""""""""
+.de P
+.   br
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft \\*[font_normal] 
+.   ie \\n[indent_paragraph] .ti +\n(PIu
+.   ne 1+\\n(.Vu
+.   el .nr indent_paragraph 1
+..
+.de T
+.   br
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft R
+.   sp 0.5
+.   ce 1
+\*(OS
+.   sp 0.5
+.   br
+.   nr indent_paragraph 0
+..
+.de H1
+.   br
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft B
+.   sp 3
+.   ce 1
+\\$1
+.   sp 2
+..
+.de H2
+.   br
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft B
+.   sp 2
+\\$1
+.   sp 1
+..
+.de H3
+.   br
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft B
+.   sp 1
+\\$1
+.   sp 1
+..
+.de H4
+.   br
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft B
+.   sp 1
+\\$1
+.   sp 1
+..
+.de H5
+.   br
+.   ps \n(PSu
+.   vs \n(VSu
+.   ft B
+.   sp 1
+\\$1
+..

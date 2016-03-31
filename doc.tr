@@ -1,0 +1,269 @@
+.\""""""""""""""" General Setup """"""""""""""""""""
+.do xflag 3
+.warn
+.\".lc_ctype de_DE.utf8
+.mediasize a4
+.hylang de_DE
+.padj
+.hy
+.\"""""""""""""" Fonts """""""""""""""""""""""""""
+.fp 1 R AGaramondPro-Regular otf
+.\".feature R +pnum +onum
+.feature R +pnum
+.rhang R f -80
+.fp 2 I AGaramondPro-Italic otf
+.\".feature I +pnum +onum
+.feature I +pnum
+.fp 3 B AGaramondPro-Semibold otf
+.\".feature B +pnum +onum
+.feature B +pnum
+.fp \n[.fp] SC AGaramondPro-Regular otf
+.feature SC +smcp
+.track SC 1 1.2 20 1
+.fp \n[.fp] C OxygenMono-Regular otf
+.fzoom C 0.75
+.fp \n[.fp] F OxygenMono-Regular otf
+.fzoom F 0.75
+.bd F 3
+.fps greek \n[.fp] G TheanoDidot-Regular ttf
+.\"""""""""""""" German Glyphs """""""""""""""""""
+.char \(:A \[Adieresis]
+.char \(:O \[Odieresis]
+.char \(:U \[Udieresis]
+.char \(:a \[adieresis]
+.char \(:o \[odieresis]
+.char \(:u \[udieresis]
+.char \(ss \[germandbls]
+.\".char \(lq \[quotedblbase]
+.\".char \(rq \[quotedblleft]
+.char \[ldq] \[quotedblleft]
+.char \[rdq] \[quotedblright]
+.char \(lq \[quoteleft]
+.char \(rq \[quoteright]
+.char \(bu \[bullet]
+.\""""""""""""""" Layout """"""""""""""""""""""""
+.nr TM 1.75c+1v
+.nr EM 2.65c
+.nr OM 1.7c
+.nr AH 14.8c
+.nr PE \n(TMu+\n(AHu
+.nr LL 10.4c
+.nr PS 10p
+.nr VS 12p
+.nr PI 1.5m
+.ll \n(LLu
+.lt \n(LLu
+.\""""""""""""""" Macros """"""""""""""""""""""""
+.de Separator
+.br
+.sp 0.5
+.ce 1
+\[orn.002]\[orn.002]\[orn.002]
+.sp 0.5
+.br
+..
+.de Breakpage
+.   ch Breakpage
+.   Pagetitles
+'   bp
+.   Newpage
+..
+.de Pagetitles
+'   sp |\\n(TMu-2v
+.   if e .tl '\fIUnix Text Processing\fP'''
+.   if o .tl '''\fI\\*[h1_title]\fP'
+..
+.nr print-pageno 1
+.ds pageno-style 1
+.ev pageno
+.   evc 0
+.ev
+.nr Pagemacro 1
+.de Newpage
+.   ie e .po \\n(EMu
+.   el .po \\n(OMu
+.   nr pageno \\n%
+.   af pageno \\*[pageno-style]
+.   if \\n[print-pageno]>0 \{\
+.       ev pageno
+.           sp |\\n(PEu+2v
+.           ie o .ad r
+.           el .ad l
+\\n[pageno]
+.           br
+.       ev
+.   \}
+.   ev pagelabel
+\\X'PS: [ /Label (\\n[pageno]) /PAGELABEL pdfmark'
+.       br
+.   ev
+.   wh \\n(PEu Breakpage
+'   sp |\\n(TMu
+.   ns
+.   if \\n[Pagemacro] .Pagemacro
+..
+.de Bookmark
+.   mk Btmp
+.   ev bookmarks
+.       ie \\n[Btmp]<=\\n(TM \{
+.           sp |0c
+.           nr bmove 1v+4p
+.       \}
+.       el .nr bmove 1v
+\v'-\\n[bmove]u'\\X'PDFMark: Bookmark 0 \\$1'
+.       sp |\\n[Btmp]u
+.   ev
+..
+.de @IP
+.   ie \\n[.$]>1 .lnr indent \\$2
+.   el .lnr indent \w'\\$1'u
+.   in +\\n[indent]u
+.   ti -\\n[indent]u
+\&\\$1\h'|\\n[indent]u'\c
+..
+.nr h1 0 1
+.nr h2 0 1
+.nr h3 0 1
+.ds h1_title "
+.ds h2_title "
+.de H1
+.   ds h1_number "\\n+[h1]\h'2n'
+.   ds h1_title "\\n[h1]\\0\\$1
+.   ne 6
+.   sp 1
+.   rs
+.   sp 3p
+.   Bookmark "\\$1"
+.   ft B
+.   ps 14p
+.   vs 17p
+.   @IP "\\*[h1_number]"
+\\$1
+.   br
+.   vs
+.   ps
+.   ft
+.   in 0
+.   sp 1-3p
+.nr h2 0 1
+.nr h3 0 1
+..
+.de H2
+.   ds h2_title "\\n[h1].\\n+[h2]\h'1n'\\$1
+.   br
+.   ne 5
+.   sp
+.   Bookmark "\\$1"
+.   ft B
+.   ps 12p
+\v'8p'\\*[h2_title]\v'-8p'
+.   ps
+.   ft
+.   sp
+.nr h3 0 1
+..
+.de H3
+.   br
+.   ne 3
+.   Bookmark "\\$1"
+.   ft B
+\v'8p'\\n[h1].\\n[h2].\\n+[h3]\h'1n'\\$1\v'-8p'
+.   ft R
+.   sp
+..
+.de PN
+.   br
+..
+.de P
+.   PN
+.   ti +\\n[PI]u
+..
+.de LS
+.sp 0.25
+..
+.ds ListMark \[bu]
+.de LI
+.   ie \\n[.$]>1 .lnr indent 1m*\\$2
+.   el .lnr indent 1m
+.   ie \\n[.$]>0 .lds mark \\$1
+.   el .lds mark \\*[ListMark]
+.   in \\n[indent]u 
+.   sp 0.5
+.   @IP \\*[mark] 1m
+..
+.de LE
+.   in 0
+.   sp 0.75
+..
+.de hd              \"header
+.\".  ---
+.   nr x 0 1           \"init footnote count
+.   nr y 0-\\nb        \"current footer place
+.   ch fo -\\nbu       \"reset footer trap
+.   if \\n(dn .fz      \"leftover footnote
+..
+.de fo              \"footer
+.   nr dn 0            \"zero last diversion size
+.   if \\nx \{\
+.       ev footnotes       \"expand footnotes in ev1
+.       nf                 \"retain vertical size
+.       FN                 \"footnotes (defined later)
+.       rm FN              \"delete it
+.       if "\\n(.z"fy" .di \"end overflow diversion
+.       nr x 0             \"disable fx
+.       ev \}              \"pop environment
+.\".  ---
+.\"'bp
+..
+.de fx              \"process footnote overflow
+.   if \\nx .di fy     \"divert overflow
+..
+.de fn              \"start footnote
+.   da FN              \"divert (append) footnote
+.   ev 1               \"in environment 1
+.   ps 8pt
+.   vs 10pt
+.   ll \n(LLu
+.   if \\n+x=1 .fs     \"if first, include separator
+.   fi                 \"fill mode
+..
+.de ef              \"end footnote
+.   br                 \"finish output
+.   nr z \\n(.v        \"save spacing
+.   ev                 \"pop ev
+.   di                 \"end diversion
+.   nr y -\\n(dn       \"new footer position
+.   if \\nx=1 .nr y -(\\n(.v-\\nz) \
+                    \"uncertainty correction
+.   ch fo \\nyu        \"y is negative
+.   if (\\n(nl+1v)>(\\n(.p+\\ny) \
+.       ch fo \\n(nlu+1v   \"it didn't fit
+..
+.de fs              \"separator
+\l´1i´              \"1 inch rule
+.   br
+..
+.de fz              \"get leftover footnote
+.   fn
+.   nf                 \"retain vertical size
+.   fy                 \"where fx put it
+.   ef
+..
+.nr b 1.0i          \"bottom margin size
+.de Pagemacro
+.   hd
+..
+.\".wh 0 hd            \"header trap
+.\".wh 12i fo          \"footer trap, temp position
+.\".wh -\nbu fx       \"fx at footer position
+.\".ch fo -\nbu       \"conceal fx with fo
+.\"""""""""""""" Initialization """"""""""""""""""""
+.br
+.Newpage
+.\".ss \n[.ss] 0
+.ss 10 15 
+.\"""""""""""""" Document """"""""""""""""""""""""""
+.so preface.tr
+.so chapter1.tr
+.\" vim:tw=75:sw=0:ts=4:expandtab:filetype=groff:
+
