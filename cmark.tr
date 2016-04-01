@@ -1,3 +1,8 @@
+.\" DONE: In cmark-roff die Ausgabe der Paragraphen bei den Listeneintraegen nicht verhindern
+.\" DONE: All Bloecke beginnen mit einem .br
+.\" DONE: Die Listeneintraege kompensieren das .br mit einem .sp -1 (steht schon in IB)
+.\" DONE: Das .br aus IB entfernen
+.\" TODO: Alle Bloecke setzen paragraph_indent auf 0
 .\""""""""""""""" General Setup """"""""""""""""""""
 .do xflag 3
 .warn
@@ -40,9 +45,12 @@
 .nr QI 2*\n(PI          \" quote indent
 .nr QL \n(QI            \" quote left side indent		
 .nr QR \n(QI            \" quote right side indent
-.nr LI 2*\n(PI          \" list indent
+.nr LP \n(PI            \" list primary indent
+.nr LI \n(PI            \" list indent
+.nr BI \n(LI            \" bullet list indent
+.nr BI \n(Oi            \" ordered list indent
 .nr BS 1m               \" space for the bullet marker
-.nr ES 2*\n(PI          \" space for enum marker
+.nr OS 1n               \" space for the odered list item marker
 .\"""""""""""""" Language Setup """"""""""""""""""""""""""""
 .\".lc_ctype de_DE.utf8
 .hylang de_DE           \" hyphenation language
@@ -81,6 +89,7 @@
 .nr list_level 0 1
 .nr list_type_bullet 1
 .nr list_type_enumeration 2
+.ds list_spacing0 w
 .\""""""""""""""" Helper Macros """""""""""""""""
 .de quote_fonts
 .   ds font_normal I
@@ -102,13 +111,15 @@
 .de QB			\" Block quote begin
 .\" TODO: vertical spacing after headline or other blocks
 .   vs \n(VSu
+.   br
+.   nr indent_paragraph 0
 .   in +\n(QLu
 .   ll -\n(QRu
 .   ie \\n+[quote_level]%2 .quote_fonts
 .   el .normal_fonts
 .   nr indent_paragraph 0
 .   sp
-.   
+.   ns
 ..
 .de QE			\" Block quote end
 .   in -\n(QLu
@@ -116,29 +127,91 @@
 .   ie \\n-[quote_level]%2 .quote_fonts
 .   el .normal_fonts
 .   nr indent_paragraph 0
-..
-.de LB                  \" Bullet list begin
-.   vs \n(VSu
-.   in +\n(LIu
-.   nr list_type\\n+[list_level] \n[list_type_bullet]
-..
-.de LE                  \" Bullet list end
-.   in -\n(LIu
 .   sp
 .   ns
-.   rr list_type\\n[list_level] 
-.   nr list_level \\n[list_level]-1
 ..
-.de I
-.   ps \n(PSu
+.de BB                  \" Bullet list begin
+.   br
+.   nr indent_paragraph 0
+.   lnr prev_level \\n[list_level]
+.   nr list_type\\n+[list_level] \n[list_type_bullet]
+.   ds list_spacing\\n[list_level] \\$1
 .   vs \n(VSu
-.   ft \\*[font_normal] 
-.   sp
+.   if \\n[list_level]>1&'\\$1'w' \{\
+.	sp
+.   	ns
+.   \}
+.   if '\\*[list_spacing\\n[prev_level]]'w' \{\
+.	sp
+.	ns
+.   \}
+.   if \\n[list_level]=1 .in +\n(LPu
+.   in +\n(BIu
+..
+.de BE                  \" Bullet list end
+.   in -\n(LIu
+.   if \\n[list_level]=1 \{\
+.	in -\n(LPu
+.	sp
+.	ns
+.   \}
+.   if '\\*[list_spacing\\n[list_level]]'w' \{\
+.	sp
+.	ns
+.   \}
+.   rr list_type\\n[list_level] 
+.   rm list_spacing\\n[list_level]
+.   nr list_level \\n[list_level]-1
+.   nr indent_paragraph 0
+..
+.de OB                  \" Ordered list begin
+.   br
+.   nr indent_paragraph 0
+.   lnr prev_level \\n[list_level]
+.   nr list_type\\n+[list_level] \n[list_type_bullet]
+.   ds list_spacing\\n[list_level] \\$1
+.   vs \n(VSu
+.   if \\n[list_level]>1&'\\$1'w' \{\
+.	sp
+.   	ns
+.   \}
+.   if '\\*[list_spacing\\n[prev_level]]'w' \{\
+.	sp
+.	ns
+.   \}
+.   if \\n[list_level]=1 .in +\n(LPu
+.   in +\n(OIu
+..
+.de OE                  \" Ordered list end
+.   in -\n(OIu
+.   if \\n[list_level]=1 \{\
+.	in -\n(LPu
+.	sp
+.	ns
+.   \}
+.   if '\\*[list_spacing\\n[list_level]]'w' \{\
+.	sp
+.	ns
+.   \}
+.   rr list_type\\n[list_level] 
+.   rm list_spacing\\n[list_level]
+.   nr list_level \\n[list_level]-1
+.   nr indent_paragraph 0
+..
+.de IB
+.   br
+.   nr indent_paragraph 0
+.   vs \n(VSu
+.   if '\\*[list_spacing\\n[list_level]]'w' .sp
 .   ne 2
 .   ie \\n[list_type\\n[list_level]]=\n[list_type_bullet] \{\
 .       lnr start_position
 \\k[start_position]\\h'-\w'\*(BU'u-\n(BSu'\*(BU\\h'|\\n[start_position]'
+.	sp -1
 .   \}
+..
+.de IE
+.   nr indent_paragraph 0
 ..
 .de P
 .   br
@@ -163,6 +236,7 @@
 ..
 .de H1
 .   br
+.   nr indent_paragraph 0
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft B
@@ -170,36 +244,44 @@
 .   ce 1
 \\$1
 .   sp 2
+.   ns
 ..
 .de H2
 .   br
+.   nr indent_paragraph 0
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft B
 .   sp 2
 \\$1
 .   sp 1
+.   ns
 ..
 .de H3
 .   br
+.   nr indent_paragraph 0
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft B
 .   sp 1
 \\$1
 .   sp 1
+.   ns
 ..
 .de H4
 .   br
+.   indent_paragraph 0
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft B
 .   sp 1
 \\$1
 .   sp 1
+.   ns
 ..
 .de H5
 .   br
+.   indent_paragraph 0
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft B
