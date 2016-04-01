@@ -88,11 +88,10 @@
 .nr quote_level 0 1
 .nr list_level 0 1
 .nr list_type_bullet 1
-.nr list_type_enumeration 2
+.nr list_type_ordered 2
 .ds list_spacing0 w
 .\""""""""""""""" Helper Macros """""""""""""""""
 .de quote_fonts
-.   ds font_normal I
 .   ds font_emph   R
 .   ds font_strong BI
 .   ds font_strong_emph B
@@ -168,9 +167,9 @@
 .   br
 .   nr indent_paragraph 0
 .   lnr prev_level \\n[list_level]
-.   nr list_type\\n+[list_level] \n[list_type_bullet]
+.   nr list_type\\n+[list_level] \n[list_type_ordered]
 .   ds list_delim\\n[list_level] \\$1
-.   nr list_item_number\\n[list_level] \\$2
+.   nr list_item_number\\n[list_level] \\$2-1 1
 .   af list_item_number\\n[list_level] 1
 .   ds list_spacing\\n[list_level] \\$3
 .   vs \n(VSu
@@ -215,8 +214,8 @@
 .	sp -1
 .   \}
 .   el \{\
-.       lds marker \\n[list_item_number\\n[list_level]]\\n[list_delim\\n[list_level]]
-.       tm lds marker \\n[list_item_number\\n[list_level]]\\n[list_delim\\n[list_level]]
+.       lds marker \\n+[list_item_number\\n[list_level]]\\*[list_delim\\n[list_level]]
+.       tm lds marker \\n[list_item_number\\n[list_level]]\\*[list_delim\\n[list_level]]
 .	lnr width \\w'\\*[marker]'
 \\k[start_position]\\h'-\\n[width]u-\n(OSu'\\*[marker]\\h'|\\n[start_position]'
 .	sp -1
@@ -300,3 +299,4 @@
 .   sp 1
 \\$1
 ..
+.\" vim:ft=groff:
