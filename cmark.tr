@@ -48,7 +48,7 @@
 .nr LP \n(PI            \" list primary indent
 .nr LI \n(PI            \" list indent
 .nr BI \n(LI            \" bullet list indent
-.nr BI \n(Oi            \" ordered list indent
+.nr OI \n(LI            \" ordered list indent
 .nr BS 1m               \" space for the bullet marker
 .nr OS 1n               \" space for the odered list item marker
 .\"""""""""""""" Language Setup """"""""""""""""""""""""""""
@@ -109,7 +109,7 @@
 .de DE                  \" Document cleanup
 ..
 .de QB			\" Block quote begin
-.\" TODO: vertical spacing after headline or other blocks
+.\" DONE: vertical spacing after headline or other blocks
 .   vs \n(VSu
 .   br
 .   nr indent_paragraph 0
@@ -169,7 +169,10 @@
 .   nr indent_paragraph 0
 .   lnr prev_level \\n[list_level]
 .   nr list_type\\n+[list_level] \n[list_type_bullet]
-.   ds list_spacing\\n[list_level] \\$1
+.   ds list_delim\\n[list_level] \\$1
+.   nr list_item_number\\n[list_level] \\$2
+.   af list_item_number\\n[list_level] 1
+.   ds list_spacing\\n[list_level] \\$3
 .   vs \n(VSu
 .   if \\n[list_level]>1&'\\$1'w' \{\
 .	sp
@@ -193,6 +196,8 @@
 .	sp
 .	ns
 .   \}
+.   rm list_delim\\n[list_level]
+.   rr list_item_number\\n[list_level]
 .   rr list_type\\n[list_level] 
 .   rm list_spacing\\n[list_level]
 .   nr list_level \\n[list_level]-1
@@ -207,6 +212,13 @@
 .   ie \\n[list_type\\n[list_level]]=\n[list_type_bullet] \{\
 .       lnr start_position
 \\k[start_position]\\h'-\w'\*(BU'u-\n(BSu'\*(BU\\h'|\\n[start_position]'
+.	sp -1
+.   \}
+.   el \{\
+.       lds marker \\n[list_item_number\\n[list_level]]\\n[list_delim\\n[list_level]]
+.       tm lds marker \\n[list_item_number\\n[list_level]]\\n[list_delim\\n[list_level]]
+.	lnr width \\w'\\*[marker]'
+\\k[start_position]\\h'-\\n[width]u-\n(OSu'\\*[marker]\\h'|\\n[start_position]'
 .	sp -1
 .   \}
 ..
