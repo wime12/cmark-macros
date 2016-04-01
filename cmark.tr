@@ -2,7 +2,7 @@
 .\" DONE: All Bloecke beginnen mit einem .br
 .\" DONE: Die Listeneintraege kompensieren das .br mit einem .sp -1 (steht schon in IB)
 .\" DONE: Das .br aus IB entfernen
-.\" TODO: Alle Bloecke setzen paragraph_indent auf 0
+.\" DONE: Alle Bloecke setzen paragraph_indent auf 0
 .\""""""""""""""" General Setup """"""""""""""""""""
 .do xflag 3
 .warn
@@ -90,20 +90,30 @@
 .nr list_type_bullet 1
 .nr list_type_ordered 2
 .ds list_spacing0 w
+.nr emph 0
+.nr strong 0
 .\""""""""""""""" Helper Macros """""""""""""""""
 .de quote_fonts
+.   ds font_normal I
 .   ds font_emph   R
 .   ds font_strong BI
 .   ds font_strong_emph B
+.   ds emph \\fR
+.   ds strong \\f(BI
+.   ds strongemph \\fB
 ..
 .de normal_fonts
 .   ds font_normal R
 .   ds font_emph I
 .   ds font_strong B
 .   ds font_strong_emph BI
+.   ds emph \\fI
+.   ds strong \\fB
+.   ds strongemph \\f(BI
 ..
 .\""""""""""""""""" cmark Macros """"""""""""""""
 .de DB                  \" Document initialization
+.   normal_fonts
 ..
 .de DE                  \" Document cleanup
 ..
@@ -215,7 +225,6 @@
 .   \}
 .   el \{\
 .       lds marker \\n+[list_item_number\\n[list_level]]\\*[list_delim\\n[list_level]]
-.       tm lds marker \\n[list_item_number\\n[list_level]]\\*[list_delim\\n[list_level]]
 .	lnr width \\w'\\*[marker]'
 \\k[start_position]\\h'-\\n[width]u-\n(OSu'\\*[marker]\\h'|\\n[start_position]'
 .	sp -1
