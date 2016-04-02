@@ -1,5 +1,6 @@
 *.md
 *.ps
 *.pdf
+*.core
 test.*
 

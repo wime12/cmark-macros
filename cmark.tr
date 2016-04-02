@@ -262,11 +262,11 @@
 .   br
 .   nr indent_paragraph 0
 .   ps \n(PS*2u
-.   vs \n(VSp
+.   vs \n(VSp*2u
 .   ft B
-.   sp 3
+.   sp 1.5
 \\$1
-.   sp 2
+.   sp 1
 .   ns
 ..
 .de H2
@@ -313,7 +313,8 @@
 .   vs \n(VSp
 .   ft B
 .   sp 1
-\\$1\\h'1m'
+.   ie '\\$1'' .br
+.   el \\$1\\h'1m'
 ..
 .de PB
 ..
