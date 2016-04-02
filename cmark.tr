@@ -81,6 +81,7 @@
 .padj
 .\""""""" Control Variables and Constants """""""
 .nr indent_paragraph 0                \" indent paragraph
+.nr break_paragraph 1
 .ds font_normal R
 .ds font_emph I
 .ds font_strong B
@@ -222,19 +223,22 @@
 .       lnr start_position
 \\k[start_position]\\h'-\w'\*(BU'u-\n(BSu'\*(BU\\h'|\\n[start_position]'
 .	sp -1
+.	ns
 .   \}
 .   el \{\
 .       lds marker \\n+[list_item_number\\n[list_level]]\\*[list_delim\\n[list_level]]
 .	lnr width \\w'\\*[marker]'
 \\k[start_position]\\h'-\\n[width]u-\n(OSu'\\*[marker]\\h'|\\n[start_position]'
 .	sp -1
+.	ns
 .   \}
 ..
 .de IE
 .   nr indent_paragraph 0
 ..
 .de P
-.   br
+.   ie \\n[break_paragraph] .br
+.   el .nr break_paragraph 1
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft \\*[font_normal] 
@@ -274,6 +278,7 @@
 .   ft B
 .   sp 2
 \\$1
+.   ne 3v
 .   sp 1
 .   ns
 ..
@@ -285,27 +290,34 @@
 .   ft B
 .   sp 1
 \\$1
+.   ne 3v
 .   sp 1
 .   ns
 ..
 .de H4
 .   br
-.   indent_paragraph 0
+.   nr indent_paragraph 0
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft B
 .   sp 1
 \\$1
+.   ne 3v
 .   sp 1
 .   ns
 ..
 .de H5
 .   br
-.   indent_paragraph 0
+.   nr indent_paragraph 0
+.   nr break_paragraph 0
 .   ps \n(PSu
 .   vs \n(VSu
 .   ft B
 .   sp 1
-\\$1
+\\$1\\h'1m'
+..
+.de PB
+..
+.de PE
 ..
 .\" vim:ft=groff:
