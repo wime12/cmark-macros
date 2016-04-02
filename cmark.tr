@@ -5,7 +5,7 @@
 .\" DONE: Alle Bloecke setzen paragraph_indent auf 0
 .\""""""""""""""" General Setup """"""""""""""""""""
 .do xflag 3
-.warn
+.warn w
 .\""""""""""" Page Layout Parameters """"""""""""""""""
 .\""" Satzspiegel A4 (210 mm x 297 mm)
 .\"             Verhaeltnis Rand (einseitig)
@@ -33,13 +33,13 @@
 .nr HW \n(TW            \" header width
 .nr FW \n(TW            \" footer width
 .\""""""""""""" Font Parameters """"""""""""""""""
-.nr PS 11p              \" font size
-.nr VS 13p              \" line spacing
+.nr PS 11               \" font size in points
+.nr VS 13               \" line spacing in points
 .ds OS *\h'1m'*\h'1m'*
 .ds BU \(bu
 .\"""""""""""""""" Font Setup """""""""""""""""""
-.ps \n(PSu
-.vs \n(VSu
+.ps \n(PSp
+.vs \n(VSp
 .\"""""""""""""" Paragraph Parameters """"""""""""
 .nr PI 1.5m             \" paragraph indent
 .nr QI 2*\n(PI          \" quote indent
@@ -120,7 +120,7 @@
 ..
 .de QB			\" Block quote begin
 .\" DONE: vertical spacing after headline or other blocks
-.   vs \n(VSu
+.   vs \n(VSp
 .   br
 .   nr indent_paragraph 0
 .   in +\n(QLu
@@ -146,7 +146,7 @@
 .   lnr prev_level \\n[list_level]
 .   nr list_type\\n+[list_level] \n[list_type_bullet]
 .   ds list_spacing\\n[list_level] \\$1
-.   vs \n(VSu
+.   vs \n(VSp
 .   if \\n[list_level]>1&'\\$1'w' \{\
 .	sp
 .   	ns
@@ -183,7 +183,7 @@
 .   nr list_item_number\\n[list_level] \\$2-1 1
 .   af list_item_number\\n[list_level] 1
 .   ds list_spacing\\n[list_level] \\$3
-.   vs \n(VSu
+.   vs \n(VSp
 .   if \\n[list_level]>1&'\\$1'w' \{\
 .	sp
 .   	ns
@@ -216,7 +216,7 @@
 .de IB
 .   br
 .   nr indent_paragraph 0
-.   vs \n(VSu
+.   vs \n(VSp
 .   if '\\*[list_spacing\\n[list_level]]'w' .sp
 .   ne 2
 .   ie \\n[list_type\\n[list_level]]=\n[list_type_bullet] \{\
@@ -239,8 +239,8 @@
 .de P
 .   ie \\n[break_paragraph] .br
 .   el .nr break_paragraph 1
-.   ps \n(PSu
-.   vs \n(VSu
+.   ps \n(PS
+.   vs \n(VSp
 .   ft \\*[font_normal] 
 .   ie \\n[indent_paragraph] .ti +\n(PIu
 .   el .nr indent_paragraph 1
@@ -248,8 +248,8 @@
 ..
 .de T
 .   br
-.   ps \n(PSu
-.   vs \n(VSu
+.   ps \n(PS
+.   vs \n(VSp
 .   ft R
 .   sp 0.5
 .   ce 1
@@ -261,11 +261,10 @@
 .de H1
 .   br
 .   nr indent_paragraph 0
-.   ps \n(PSu
-.   vs \n(VSu
+.   ps \n(PS*2u
+.   vs \n(VSp
 .   ft B
 .   sp 3
-.   ce 1
 \\$1
 .   sp 2
 .   ns
@@ -273,8 +272,8 @@
 .de H2
 .   br
 .   nr indent_paragraph 0
-.   ps \n(PSu
-.   vs \n(VSu
+.   ps \n(PS*3u/2u
+.   vs \n(VSp
 .   ft B
 .   sp 2
 \\$1
@@ -285,8 +284,8 @@
 .de H3
 .   br
 .   nr indent_paragraph 0
-.   ps \n(PSu
-.   vs \n(VSu
+.   ps \n(PS*6u/5u
+.   vs \n(VSp
 .   ft B
 .   sp 1
 \\$1
@@ -297,8 +296,8 @@
 .de H4
 .   br
 .   nr indent_paragraph 0
-.   ps \n(PSu
-.   vs \n(VSu
+.   ps \n(PS
+.   vs \n(VSp
 .   ft B
 .   sp 1
 \\$1
@@ -310,8 +309,8 @@
 .   br
 .   nr indent_paragraph 0
 .   nr break_paragraph 0
-.   ps \n(PSu
-.   vs \n(VSu
+.   ps \n(PS
+.   vs \n(VSp
 .   ft B
 .   sp 1
 \\$1\\h'1m'
