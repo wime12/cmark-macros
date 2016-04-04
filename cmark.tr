@@ -33,11 +33,12 @@
 .nr HW \n(TW            \" header width
 .nr FW \n(TW            \" footer width
 .\""""""""""""" Font Parameters """"""""""""""""""
-.nr PS 11               \" font size in points
-.nr VS 13               \" line spacing in points
+.nr PS 12               \" font size in points
+.nr VS 14               \" line spacing in points
 .ds OS *\h'1m'*\h'1m'*
 .ds BU \(bu
 .\"""""""""""""""" Font Setup """""""""""""""""""
+\".fzoom CW 0.9
 .ps \n(PSp
 .vs \n(VSp
 .\"""""""""""""" Paragraph Parameters """"""""""""
@@ -51,6 +52,7 @@
 .nr OI \n(LI            \" ordered list indent
 .nr BS 1m               \" space for the bullet marker
 .nr OS 1n               \" space for the odered list item marker
+.nr CI \n(PI            \" code block indent
 .\"""""""""""""" Language Setup """"""""""""""""""""""""""""
 .\".lc_ctype de_DE.utf8
 .hylang de_DE           \" hyphenation language
@@ -80,7 +82,7 @@
 .\""""""""""""""""" Paragraph Setup """""""""""""
 .padj
 .\""""""" Control Variables and Constants """""""
-.nr indent_paragraph 0                \" indent paragraph
+.nr indent_paragraph 0
 .nr break_paragraph 1
 .ds font_normal R
 .ds font_emph I
@@ -115,6 +117,7 @@
 .\""""""""""""""""" cmark Macros """"""""""""""""
 .de DB                  \" Document initialization
 .   normal_fonts
+.   hd
 ..
 .de DE                  \" Document cleanup
 ..
@@ -127,7 +130,6 @@
 .   ll -\n(QRu
 .   ie \\n+[quote_level]%2 .quote_fonts
 .   el .normal_fonts
-.   nr indent_paragraph 0
 .   sp
 .   ns
 ..
@@ -236,6 +238,23 @@
 .de IE
 .   nr indent_paragraph 0
 ..
+.de CB			\" Block quote begin
+.   vs \n(VSp
+.   br
+.   ps \n(PSp
+.   in +\n(CIu
+.   ft CW
+.   nf
+.   sp
+.   ns
+..
+.de CE			\" Block quote end
+.   in -\n(CIu
+.   ft P
+.   fi
+.   sp
+.   ns
+..
 .de P
 .   ie \\n[break_paragraph] .br
 .   el .nr break_paragraph 1
@@ -245,6 +264,9 @@
 .   ie \\n[indent_paragraph] .ti +\n(PIu
 .   el .nr indent_paragraph 1
 .   ne 2
+..
+.de I                   \" explicitly specify an indent of the first line
+.   ti +\n(PIu
 ..
 .de T
 .   br
@@ -301,7 +323,7 @@
 .   ft B
 .   sp 1
 \\$1
-.   ne 3v
+.   ne 4v
 .   sp 1
 .   ns
 ..
@@ -317,7 +339,12 @@
 .   el \\$1\\h'1m'
 ..
 .de PB
+.   di image
+.   ev 1
 ..
 .de PE
+.   br
+.   ev
+.   di
 ..
 .\" vim:ft=groff:
