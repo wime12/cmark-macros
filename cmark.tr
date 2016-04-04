@@ -32,6 +32,8 @@
 .nr TW 14.000c          \" text width
 .nr HW \n(TW            \" header width
 .nr FW \n(TW            \" footer width
+.ds NS 1
+.ds NM footer_even_odd
 .\""""""""""""" Font Parameters """"""""""""""""""
 .nr PS 12               \" font size in points
 .nr VS 14               \" line spacing in points
@@ -73,7 +75,10 @@
 '       sp \n(TMu
 .   . \}
 .de fo
-'bp
+.   wh -\n(BMu
+.   \*(NM
+.   wh -\n(BMu fo
+'   bp
 ..
 .wh 0 hd
 .wh -\n(BMu fo
@@ -95,6 +100,9 @@
 .ds list_spacing0 w
 .nr emph 0
 .nr strong 0
+.nr page_number 0
+.af page_number \\*(NS
+.nr text_end \n(.pu-\n(TMu
 .\""""""""""""""" Helper Macros """""""""""""""""
 .de quote_fonts
 .   ds font_normal I
@@ -113,6 +121,22 @@
 .   ds emph \\fI
 .   ds strong \\fB
 .   ds strongemph \\f(BI
+..
+.de footer_even_odd
+.   ev pageno
+.       sp |\n[text_end]u+2v
+.       ie o .ad r
+.       el .ad l
+.       nr page_number \\n%
+\\n[page_number]
+.       br
+.   ev
+..
+.de label_page
+.   ev pagelabel
+\\X'PS: [ /Label (\\n[page_number]) /PAGELABEL pdfmark'
+.       br
+.   ev
 ..
 .\""""""""""""""""" cmark Macros """"""""""""""""
 .de DB                  \" Document initialization
